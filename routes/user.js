@@ -1,7 +1,8 @@
 const { Router } = require("express");
 const router = Router();
 const userMiddleware = require("../middleware/user");
-const { User } = require("../db");
+const { User, Course } = require("../db");
+const { default: mongoose } = require("mongoose");
 
 // User Routes
 router.post("/signup", (req, res) => {
@@ -17,9 +18,9 @@ router.post("/signup", (req, res) => {
   });
 });
 
-router.get("/courses", (req, res) => {
+router.get("/courses", async (req, res) => {
   // Implement listing all courses logic
-  const response = Course.find({});
+  const response = await Course.find({});
 
   res.json({
     courses: response,
@@ -28,12 +29,12 @@ router.get("/courses", (req, res) => {
 
 router.post("/courses/:courseId", userMiddleware, async (req, res) => {
   // Implement course purchase logic
-  const username = req.headers.username;
   const courseId = req.params.courseId;
+  const username = req.headers.username;
 
-  await User.findOne(
+  await User.updateOne(
     {
-      username,
+      username: username,
     },
     {
       $push: {
@@ -41,8 +42,9 @@ router.post("/courses/:courseId", userMiddleware, async (req, res) => {
       },
     }
   );
-
-  res.json({ message: "Course Purchased" });
+  res.json({
+    message: "Purchase complete!",
+  });
 });
 
 router.get("/purchasedCourses", userMiddleware, async (req, res) => {

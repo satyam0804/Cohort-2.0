@@ -31,21 +31,24 @@ router.post("/courses", adminMiddleware, async (req, res) => {
   const imageLink = req.body.imageLink;
   const price = req.body.price;
 
-  const newCourse = await Admin.create({
+  const newCourse = await Course.create({
     title,
     description,
     imageLink,
     price,
   });
-  res.json({ message: "New course created", courseId: newCourse.id });
+  res.json({ message: "New course created", courseId: newCourse._id });
 });
 
 router.get("/courses", adminMiddleware, async (req, res) => {
   // Implement fetching all courses logic
   const response = await Course.find({});
   res.json({
-    message: response,
+    courses: response,
   });
 });
 
 module.exports = router;
+
+// "username": "satyam08@gmail.com",
+// "password": "123345",

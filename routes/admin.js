@@ -17,6 +17,7 @@ router.post("/signup", async (req, res) => {
     message: "Admin created successfully",
   });
 });
+
 router.get("/listadmin", async (req, res) => {
   const response = await Admin.find({});
   res.json({
